@@ -60,15 +60,9 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 <div id="executive-summary" class="section level1">
 <h1>Executive Summary</h1>
-<p>This project used data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants to predict different ways barbells are lifted. We used training data and machine learning to develop a machine model that would be able to predict one of the correct way and five of the incorrect ways to lift barbells. The best prediction model, which has been created by the Gradient Boost learning algorithm, has an accuracy of 97.4% for in-sample data and an accuracy of 96.2% for out-of-sample data. The model is able to get 95% accuracy on pml-testing data</p>
-<pre><code>## Loading required package: lattice
-## Loading required package: ggplot2
-## Rattle: A free graphical interface for data mining with R.
-## Version 3.3.0 Copyright (c) 2006-2014 Togaware Pty Ltd.
-## Type 'rattle()' to shake, rattle, and roll your data.
-## Loading required package: foreach
-## Loading required package: iterators
-## Loading required package: parallel</code></pre>
+<p>In this project, I used data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants to predict different ways barbells are lifted. I used training data and machine learning algorithm to develop a model that would be able to predict one of the correct way and five of the incorrect ways to lift barbells. The best prediction model, which has been created by the Gradient Boost learning algorithm, has an accuracy of 97.4% for in-sample data and an accuracy of 96.2% for out-of-sample data. The model is able to get 95% accuracy on test cases data</p>
+<pre><code>## Loading required package: foreach
+## Loading required package: iterators</code></pre>
 </div>
 <div id="exploratory-analysis" class="section level1">
 <h1>Exploratory Analysis</h1>
@@ -420,9 +414,8 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </div>
 <div id="tidy-data" class="section level1">
 <h1>Tidy Data</h1>
-<p>The columns with many missing data will be removed to produce tidy data. Variables with zero variance will be identified and removed.</p>
-<pre class="r"><code>#remove columns with unrelated to motions and  NA values.  These columns include time stamps, new_window, num_window
-features &lt;- c(&quot;user_name&quot;,&quot;roll_belt&quot;,&quot;pitch_belt&quot;, &quot;yaw_belt&quot;,&quot;total_accel_belt&quot;,&quot;gyros_belt_x&quot;,&quot;gyros_belt_y&quot;,&quot;gyros_belt_z&quot;,&quot;accel_belt_x&quot;, &quot;accel_belt_y&quot;,&quot;accel_belt_z&quot;,&quot;magnet_belt_x&quot;,&quot;magnet_belt_y&quot;,&quot;magnet_belt_z&quot;, &quot;roll_arm&quot;,&quot;pitch_arm&quot;,&quot;yaw_arm&quot;,&quot;total_accel_arm&quot;,&quot;gyros_arm_x&quot;,&quot;gyros_arm_y&quot;,&quot;gyros_arm_z&quot;,&quot;accel_arm_x&quot;,&quot;accel_arm_y&quot;,&quot;accel_arm_z&quot;,&quot;magnet_arm_x&quot;,&quot;magnet_arm_y&quot;,&quot;magnet_arm_z&quot;,&quot;roll_dumbbell&quot;,&quot;pitch_dumbbell&quot;,&quot;yaw_dumbbell&quot;,&quot;total_accel_dumbbell&quot;,&quot;gyros_dumbbell_x&quot;,&quot;gyros_dumbbell_y&quot;,&quot;gyros_dumbbell_z&quot;,&quot;accel_dumbbell_x&quot;,&quot;accel_dumbbell_y&quot;,&quot;accel_dumbbell_z&quot;,&quot;magnet_dumbbell_x&quot;,&quot;magnet_dumbbell_y&quot;,&quot;magnet_dumbbell_z&quot;,&quot;roll_forearm&quot;,&quot;pitch_forearm&quot;,&quot;yaw_forearm&quot;,&quot;total_accel_forearm&quot;,&quot;gyros_forearm_x&quot;,&quot;gyros_forearm_y&quot;,&quot;gyros_forearm_z&quot;,&quot;accel_forearm_x&quot;,&quot;accel_forearm_y&quot;,&quot;accel_forearm_z&quot;,&quot;magnet_forearm_x&quot;,&quot;magnet_forearm_y&quot;,&quot;magnet_forearm_z&quot;)
+<p>The columns with many missing data were removed to produce tidy data. In the final data set, there is no Variables with near zero variance.</p>
+<pre class="r"><code>features &lt;- c(&quot;user_name&quot;,&quot;roll_belt&quot;,&quot;pitch_belt&quot;, &quot;yaw_belt&quot;,&quot;total_accel_belt&quot;,&quot;gyros_belt_x&quot;,&quot;gyros_belt_y&quot;,&quot;gyros_belt_z&quot;,&quot;accel_belt_x&quot;, &quot;accel_belt_y&quot;,&quot;accel_belt_z&quot;,&quot;magnet_belt_x&quot;,&quot;magnet_belt_y&quot;,&quot;magnet_belt_z&quot;, &quot;roll_arm&quot;,&quot;pitch_arm&quot;,&quot;yaw_arm&quot;,&quot;total_accel_arm&quot;,&quot;gyros_arm_x&quot;,&quot;gyros_arm_y&quot;,&quot;gyros_arm_z&quot;,&quot;accel_arm_x&quot;,&quot;accel_arm_y&quot;,&quot;accel_arm_z&quot;,&quot;magnet_arm_x&quot;,&quot;magnet_arm_y&quot;,&quot;magnet_arm_z&quot;,&quot;roll_dumbbell&quot;,&quot;pitch_dumbbell&quot;,&quot;yaw_dumbbell&quot;,&quot;total_accel_dumbbell&quot;,&quot;gyros_dumbbell_x&quot;,&quot;gyros_dumbbell_y&quot;,&quot;gyros_dumbbell_z&quot;,&quot;accel_dumbbell_x&quot;,&quot;accel_dumbbell_y&quot;,&quot;accel_dumbbell_z&quot;,&quot;magnet_dumbbell_x&quot;,&quot;magnet_dumbbell_y&quot;,&quot;magnet_dumbbell_z&quot;,&quot;roll_forearm&quot;,&quot;pitch_forearm&quot;,&quot;yaw_forearm&quot;,&quot;total_accel_forearm&quot;,&quot;gyros_forearm_x&quot;,&quot;gyros_forearm_y&quot;,&quot;gyros_forearm_z&quot;,&quot;accel_forearm_x&quot;,&quot;accel_forearm_y&quot;,&quot;accel_forearm_z&quot;,&quot;magnet_forearm_x&quot;,&quot;magnet_forearm_y&quot;,&quot;magnet_forearm_z&quot;)
 
 clean.data&lt;-  data.frame(classe=data[,&quot;classe&quot;], data[,features])
 
@@ -432,7 +425,7 @@ nearZeroVar(clean.data)</code></pre>
 </div>
 <div id="methods" class="section level1">
 <h1>Methods</h1>
-<p>We will partition the data into training set and test set. The training set will be 70% of the available data. The test will be 30%. We create a random order for the data so that the machine learning algorithms do not take advantage the order in classe field The test set will be used to test the out-of-sample errors of algorithms. We will try different machine algorithms on existing features. If existing features cannot achieve close to 100% accuracy, we will try to create new features from existing features to improve accuracy.</p>
+<p>I partitioned the data into training set and test set. The training set was made of 70% of the available data. The test set was 30%. I created a random order for the data so that the machine learning algorithms do not take advantage the order in classe field The test set would be used to find the out-of-sample errors from different algorithms. I used a few different machine learning algorithms on existing features first. If existing features could not achieve close to 100% accuracy, I would try to create new features from existing features to improve accuracy.</p>
 <p>Partition the data</p>
 <pre class="r"><code>set.seed(1234)
 inTrain &lt;-createDataPartition(y=clean.data$classe, p=0.7, list=FALSE)
@@ -445,9 +438,8 @@ testing &lt;- clean.data[-inTrain,]
 preProc &lt;-preProcess(training[,3:ncol(training)], method=&quot;pca&quot;, thresh=0.95)
 trainPC &lt;-predict(preProc,training[,3:ncol(training)])
 trainPC &lt;- cbind(classe=training$classe,trainPC)
-modelFit2 &lt;-train(classe ~. ,method=&quot;rpart&quot;, data=trainPC)</code></pre>
-<pre><code>## Loading required package: rpart</code></pre>
-<pre class="r"><code>pred2 &lt;- predict(modelFit2,trainPC)
+modelFit2 &lt;-train(classe ~. ,method=&quot;rpart&quot;, data=trainPC)
+pred2 &lt;- predict(modelFit2,trainPC)
 confusionMatrix(training$classe,pred2)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
@@ -528,68 +520,68 @@ confusionMatrix(training$classe,pred7)</code></pre>
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 3859   35    7    4    1
-##          B   58 2548   51    0    1
-##          C    1   54 2323   16    2
-##          D    0    3   62 2179    8
-##          E    3   16   14   23 2469
+##          A 3875   23    4    3    1
+##          B   54 2545   59    0    0
+##          C    0   54 2317   23    2
+##          D    2    2   65 2177    6
+##          E    5   18   13   24 2465
 ## 
 ## Overall Statistics
 ##                                         
 ##                Accuracy : 0.974         
-##                  95% CI : (0.971, 0.976)
-##     No Information Rate : 0.285         
+##                  95% CI : (0.971, 0.977)
+##     No Information Rate : 0.287         
 ##     P-Value [Acc &gt; NIR] : &lt; 2e-16       
 ##                                         
 ##                   Kappa : 0.967         
-##  Mcnemar's Test P-Value : 4.99e-12      
+##  Mcnemar's Test P-Value : 9.96e-13      
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity             0.984    0.959    0.945    0.981    0.995
-## Specificity             0.995    0.990    0.994    0.994    0.995
-## Pos Pred Value          0.988    0.959    0.970    0.968    0.978
-## Neg Pred Value          0.994    0.990    0.988    0.996    0.999
-## Prevalence              0.285    0.193    0.179    0.162    0.181
-## Detection Rate          0.281    0.185    0.169    0.159    0.180
+## Sensitivity             0.985    0.963    0.943    0.978    0.996
+## Specificity             0.997    0.990    0.993    0.993    0.995
+## Pos Pred Value          0.992    0.957    0.967    0.967    0.976
+## Neg Pred Value          0.994    0.991    0.988    0.996    0.999
+## Prevalence              0.287    0.192    0.179    0.162    0.180
+## Detection Rate          0.282    0.185    0.169    0.158    0.179
 ## Detection Prevalence    0.284    0.193    0.174    0.164    0.184
-## Balanced Accuracy       0.990    0.975    0.969    0.987    0.995</code></pre>
-<p>The model with the least in-sample error is Gradient Booting. It has an in-sample accuracy of 97.4% (2.6% error rate). Next, we check whether or not there is overfitting by using cross-validation data. The error rate should not increase significantly if there is no overfitting.</p>
+## Balanced Accuracy       0.991    0.977    0.968    0.986    0.996</code></pre>
+<p>The model with the least in-sample error was Gradient Booting. It had an in-sample accuracy of 97.4% (2.6% error rate). Next, I checked whether or not there was overfitting by using cross-validation data. The error rate should not have increased significantly if there was no overfitting.</p>
 <pre class="r"><code>pred7 &lt;-predict(modelFit7, testing)
 confusionMatrix(testing$classe,pred7)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1653   14    2    4    1
-##          B   44 1070   25    0    0
-##          C    0   32  981   11    2
-##          D    0    5   23  927    9
-##          E    2   15   12   12 1041
+##          A 1650   17    3    3    1
+##          B   41 1063   31    3    1
+##          C    0   31  982   12    1
+##          D    0    4   23  926   11
+##          E    1   15   10   15 1041
 ## 
 ## Overall Statistics
 ##                                         
-##                Accuracy : 0.964         
-##                  95% CI : (0.959, 0.968)
-##     No Information Rate : 0.289         
+##                Accuracy : 0.962         
+##                  95% CI : (0.957, 0.967)
+##     No Information Rate : 0.288         
 ##     P-Value [Acc &gt; NIR] : &lt; 2e-16       
 ##                                         
-##                   Kappa : 0.954         
-##  Mcnemar's Test P-Value : 3.89e-08      
+##                   Kappa : 0.952         
+##  Mcnemar's Test P-Value : 1.87e-05      
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity             0.973    0.942    0.941    0.972    0.989
-## Specificity             0.995    0.985    0.991    0.992    0.992
-## Pos Pred Value          0.987    0.939    0.956    0.962    0.962
-## Neg Pred Value          0.989    0.986    0.987    0.995    0.998
-## Prevalence              0.289    0.193    0.177    0.162    0.179
-## Detection Rate          0.281    0.182    0.167    0.158    0.177
+## Sensitivity             0.975    0.941    0.936    0.966    0.987
+## Specificity             0.994    0.984    0.991    0.992    0.992
+## Pos Pred Value          0.986    0.933    0.957    0.961    0.962
+## Neg Pred Value          0.990    0.986    0.986    0.993    0.997
+## Prevalence              0.288    0.192    0.178    0.163    0.179
+## Detection Rate          0.280    0.181    0.167    0.157    0.177
 ## Detection Prevalence    0.284    0.194    0.174    0.164    0.184
-## Balanced Accuracy       0.984    0.964    0.966    0.982    0.990</code></pre>
-<p>The Gradient Boosting prediction model accurracy on cross-validation data is 96.2%. An error rate of 3.8%.</p>
+## Balanced Accuracy       0.985    0.962    0.964    0.979    0.989</code></pre>
+<p>The Gradient Boosting prediction model accuracy on cross-validation data was 96.2%, an error rate of 3.8%. It was not likely that there was overfitting.</p>
 <p>The important variables of the Gradient Boosting prediction model are listed below:</p>
 <pre class="r"><code>varImp(modelFit7,scale = TRUE)</code></pre>
 <pre><code>## gbm variable importance
@@ -598,45 +590,39 @@ confusionMatrix(testing$classe,pred7)</code></pre>
 ## 
 ##                   Overall
 ## roll_belt          100.00
-## pitch_forearm       45.00
-## yaw_belt            41.06
-## magnet_dumbbell_z   31.53
-## magnet_dumbbell_y   25.86
-## roll_forearm        24.93
-## magnet_belt_z       19.20
-## gyros_belt_z        13.08
-## accel_forearm_x     12.18
-## accel_dumbbell_y    10.67
-## pitch_belt          10.66
-## roll_dumbbell       10.52
-## gyros_dumbbell_y     9.30
-## magnet_forearm_z     8.88
-## magnet_arm_z         7.36
-## accel_dumbbell_x     6.95
-## yaw_arm              6.90
-## magnet_forearm_x     4.87
-## accel_belt_z         4.53
-## accel_dumbbell_z     4.33</code></pre>
+## pitch_forearm       51.64
+## yaw_belt            44.25
+## magnet_dumbbell_z   30.02
+## magnet_dumbbell_y   26.20
+## roll_forearm        22.28
+## magnet_belt_z       20.40
+## gyros_belt_z        14.60
+## accel_forearm_x     13.62
+## roll_dumbbell       13.08
+## pitch_belt          11.09
+## accel_dumbbell_y    10.02
+## magnet_forearm_z     9.34
+## gyros_dumbbell_y     9.22
+## yaw_arm              6.89
+## magnet_dumbbell_x    6.19
+## accel_dumbbell_x     5.95
+## magnet_belt_x        5.31
+## magnet_belt_y        5.25
+## magnet_arm_z         4.73</code></pre>
 </div>
 <div id="test-cases-prediction" class="section level1">
 <h1>Test Cases Prediction</h1>
 <p>The classe predictions on test cases are listed below:</p>
 <pre class="r"><code>predict(modelFit7, problem)</code></pre>
-<pre><code>##  [1] B A B A A E D B A A B C B A E E A B B B
+<pre><code>##  [1] C A B A A E D B A A B C B A E E A B B B
 ## Levels: A B C D E</code></pre>
-<p>The accuracy is 95%. Only the first test case is incorrect.</p>
-</div>
-<div id="conclusions" class="section level1">
-<h1>Conclusions</h1>
+<p>The accuracy was 95%. Only the first test case is incorrect.</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
 <p>The training data are available here: <a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv">https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv</a></p>
 <p>The test data are available here: <a href="https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv">https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv</a></p>
 <p>Information about Barbell Activity study are available here: <a href="http://groupware.les.inf.puc-rio.br/har">http://groupware.les.inf.puc-rio.br/har</a></p>
-</div>
-<div id="appendix" class="section level1">
-<h1>Appendix</h1>
 </div>
 
 
