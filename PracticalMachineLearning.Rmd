@@ -6,7 +6,7 @@ output: html_document
 ---
 #Executive Summary
 
-In this project, I used data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants to predict different ways barbells are lifted.  I used training data and machine learning algorithm to develop a model that would be able to predict one of the correct way and five of the incorrect ways to lift barbells.  The best prediction model, which has been created by the Gradient Boost learning algorithm, has an accuracy of 97.4% for in-sample data and an accuracy of 96.2% for out-of-sample data.  The model is able to get 95% accuracy on test cases data 
+In this project, I used data from a barbell activity study, Qualitative Activity Recognition of Weight Lifting Exercises, to predict different ways barbells are lifted.  The data are measurements from accelerometers on the belt, forearm, arm, and dumbell of 6 participants .  I applied machine learning algorithm to develop a model that would be able to predict one of the correct way and five of the incorrect ways to lift barbells.  The best prediction model, which has been created by the Gradient Boost learning algorithm, has an accuracy of 97.4% for in-sample data and an accuracy of 96.2% for out-of-sample data.  The model is able to achieve 95% accuracy on test cases data 
 
 
 ```{r setup, include=FALSE}
@@ -38,22 +38,24 @@ summary(data)
 
 #Tidy Data
 
-The columns with many missing data were removed to produce tidy data. In the final data set, there is no Variables with near zero variance. 
+The columns with many missing data were removed to produce tidy data. 
 
 ```{r}
 
 features <- c("user_name","roll_belt","pitch_belt", "yaw_belt","total_accel_belt","gyros_belt_x","gyros_belt_y","gyros_belt_z","accel_belt_x", "accel_belt_y","accel_belt_z","magnet_belt_x","magnet_belt_y","magnet_belt_z", "roll_arm","pitch_arm","yaw_arm","total_accel_arm","gyros_arm_x","gyros_arm_y","gyros_arm_z","accel_arm_x","accel_arm_y","accel_arm_z","magnet_arm_x","magnet_arm_y","magnet_arm_z","roll_dumbbell","pitch_dumbbell","yaw_dumbbell","total_accel_dumbbell","gyros_dumbbell_x","gyros_dumbbell_y","gyros_dumbbell_z","accel_dumbbell_x","accel_dumbbell_y","accel_dumbbell_z","magnet_dumbbell_x","magnet_dumbbell_y","magnet_dumbbell_z","roll_forearm","pitch_forearm","yaw_forearm","total_accel_forearm","gyros_forearm_x","gyros_forearm_y","gyros_forearm_z","accel_forearm_x","accel_forearm_y","accel_forearm_z","magnet_forearm_x","magnet_forearm_y","magnet_forearm_z")
 
 clean.data<-  data.frame(classe=data[,"classe"], data[,features])
+clean.problem<-problem[,features]
+
 
 nearZeroVar(clean.data)
 
-clean.problem<-problem[,features]
 ```
+In the tidy data set, there is no variable with near zero variance. 
 
 #Methods
 
-I partitioned the data into training set and test set.  The training set was made of 70% of the available data.  The test set was 30%.  I created a random order for the data so that the machine learning algorithms do not take advantage the order in classe field  The test set would be used to find the out-of-sample errors from different algorithms.  I used a few different machine learning algorithms on existing features first.   If existing features could not achieve close to 100% accuracy, I would try to create new features from existing features to improve accuracy.
+I partitioned the data into training and test sets.  The training set was made of 70% of the available data.  The test set was 30%.  I randomized the order for the data so that the machine learning algorithms did not take advantage the order in classe field.  I used a few different machine learning algorithms on existing features first using the training set.   If models with existing features could not achieve close to 100% accuracy, I would try to create new features from existing features to improve accuracy. The test set would be used to find the out-of-sample error rate of the best prediction model.
 
 Partition the data
 ```{r}
@@ -63,7 +65,7 @@ inTrain <-createDataPartition(y=clean.data$classe, p=0.7, list=FALSE)
 temp <- clean.data[inTrain, ]
 training <- temp[sample(nrow(temp)),]             
 testing <- clean.data[-inTrain,]
-#control <- trainControl(method="repeatedcv", number=10, repeats=3)
+
 
 ```
 
@@ -71,7 +73,7 @@ testing <- clean.data[-inTrain,]
 Recursive Partition with PCA
 
 ```{r}
-# accuracy =0.3908
+
 preProc <-preProcess(training[,3:ncol(training)], method="pca", thresh=0.95)
 trainPC <-predict(preProc,training[,3:ncol(training)])
 trainPC <- cbind(classe=training$classe,trainPC)
@@ -83,7 +85,7 @@ confusionMatrix(training$classe,pred2)
 
 Support Vector Machine with PCA
 ```{r}
-#accuracy: 0.9281
+
 preProc <-preProcess(training[,3:ncol(training)], method="pca",thresh=.95)
 preProc$numComp
 trainPC <-predict(preProc,training[,3:ncol(training)])
@@ -92,7 +94,7 @@ modelFit6 <-svm(classe~., data=trainPC)
 confusionMatrix(trainPC$classe,predict(modelFit6,trainPC))
 ```
 
-Gradient Boosting
+Stochastic Gradient Boosting
 ```{r}
 
 modelFit7 <-train(classe ~., method="gbm", data=training, verbose=FALSE)
@@ -101,20 +103,15 @@ confusionMatrix(training$classe,pred7)
 ```
 
 
-The model with the least in-sample error was Gradient Booting.  It had an in-sample accuracy of 97.4%  (2.6% error rate).  Next, I checked whether or not there was overfitting by using cross-validation data.  The error rate should not have increased significantly if there was no overfitting.
+The model with the least in-sample error was Stochastic Gradient Boosting.  It had an in-sample accuracy of 97.4%  (2.6% error rate).  Next, I checked whether or not there was overfitting by using test data.  The error rate should not have increased significantly if there was no overfitting.
 
 ```{r}
 pred7 <-predict(modelFit7, testing)
 confusionMatrix(testing$classe,pred7)
 ```
 
-The Gradient Boosting prediction model accuracy on cross-validation data was 96.2%, an error rate of 3.8%.  It was not likely that there was overfitting.
+The Gradient Boosting prediction model accuracy on test data was 96.2% (3.8% error rate).  It was not likely that there was overfitting.
 
-
-The important variables of the Gradient Boosting prediction model are listed below:
-```{r}
-varImp(modelFit7,scale = TRUE)
-```
 
 #Test Cases Prediction 
 
