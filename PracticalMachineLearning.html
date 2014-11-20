@@ -60,7 +60,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 <div id="executive-summary" class="section level1">
 <h1>Executive Summary</h1>
-<p>In this project, I used data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants to predict different ways barbells are lifted. I used training data and machine learning algorithm to develop a model that would be able to predict one of the correct way and five of the incorrect ways to lift barbells. The best prediction model, which has been created by the Gradient Boost learning algorithm, has an accuracy of 97.4% for in-sample data and an accuracy of 96.2% for out-of-sample data. The model is able to get 95% accuracy on test cases data</p>
+<p>In this project, I used data from a barbell activity study, Qualitative Activity Recognition of Weight Lifting Exercises, to predict different ways barbells are lifted. The data are measurements from accelerometers on the belt, forearm, arm, and dumbell of 6 participants . I applied machine learning algorithm to develop a model that would be able to predict one of the correct way and five of the incorrect ways to lift barbells. The best prediction model, which has been created by the Gradient Boost learning algorithm, has an accuracy of 97.4% for in-sample data and an accuracy of 96.2% for out-of-sample data. The model is able to achieve 95% accuracy on test cases data</p>
 <pre><code>## Loading required package: foreach
 ## Loading required package: iterators</code></pre>
 </div>
@@ -414,28 +414,28 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </div>
 <div id="tidy-data" class="section level1">
 <h1>Tidy Data</h1>
-<p>The columns with many missing data were removed to produce tidy data. In the final data set, there is no Variables with near zero variance.</p>
+<p>The columns with many missing data were removed to produce tidy data.</p>
 <pre class="r"><code>features &lt;- c(&quot;user_name&quot;,&quot;roll_belt&quot;,&quot;pitch_belt&quot;, &quot;yaw_belt&quot;,&quot;total_accel_belt&quot;,&quot;gyros_belt_x&quot;,&quot;gyros_belt_y&quot;,&quot;gyros_belt_z&quot;,&quot;accel_belt_x&quot;, &quot;accel_belt_y&quot;,&quot;accel_belt_z&quot;,&quot;magnet_belt_x&quot;,&quot;magnet_belt_y&quot;,&quot;magnet_belt_z&quot;, &quot;roll_arm&quot;,&quot;pitch_arm&quot;,&quot;yaw_arm&quot;,&quot;total_accel_arm&quot;,&quot;gyros_arm_x&quot;,&quot;gyros_arm_y&quot;,&quot;gyros_arm_z&quot;,&quot;accel_arm_x&quot;,&quot;accel_arm_y&quot;,&quot;accel_arm_z&quot;,&quot;magnet_arm_x&quot;,&quot;magnet_arm_y&quot;,&quot;magnet_arm_z&quot;,&quot;roll_dumbbell&quot;,&quot;pitch_dumbbell&quot;,&quot;yaw_dumbbell&quot;,&quot;total_accel_dumbbell&quot;,&quot;gyros_dumbbell_x&quot;,&quot;gyros_dumbbell_y&quot;,&quot;gyros_dumbbell_z&quot;,&quot;accel_dumbbell_x&quot;,&quot;accel_dumbbell_y&quot;,&quot;accel_dumbbell_z&quot;,&quot;magnet_dumbbell_x&quot;,&quot;magnet_dumbbell_y&quot;,&quot;magnet_dumbbell_z&quot;,&quot;roll_forearm&quot;,&quot;pitch_forearm&quot;,&quot;yaw_forearm&quot;,&quot;total_accel_forearm&quot;,&quot;gyros_forearm_x&quot;,&quot;gyros_forearm_y&quot;,&quot;gyros_forearm_z&quot;,&quot;accel_forearm_x&quot;,&quot;accel_forearm_y&quot;,&quot;accel_forearm_z&quot;,&quot;magnet_forearm_x&quot;,&quot;magnet_forearm_y&quot;,&quot;magnet_forearm_z&quot;)
 
 clean.data&lt;-  data.frame(classe=data[,&quot;classe&quot;], data[,features])
+clean.problem&lt;-problem[,features]
+
 
 nearZeroVar(clean.data)</code></pre>
 <pre><code>## integer(0)</code></pre>
-<pre class="r"><code>clean.problem&lt;-problem[,features]</code></pre>
+<p>In the tidy data set, there is no variable with near zero variance.</p>
 </div>
 <div id="methods" class="section level1">
 <h1>Methods</h1>
-<p>I partitioned the data into training set and test set. The training set was made of 70% of the available data. The test set was 30%. I created a random order for the data so that the machine learning algorithms do not take advantage the order in classe field The test set would be used to find the out-of-sample errors from different algorithms. I used a few different machine learning algorithms on existing features first. If existing features could not achieve close to 100% accuracy, I would try to create new features from existing features to improve accuracy.</p>
+<p>I partitioned the data into training and test sets. The training set was made of 70% of the available data. The test set was 30%. I randomized the order for the data so that the machine learning algorithms did not take advantage the order in classe field. I used a few different machine learning algorithms on existing features first using the training set. If models with existing features could not achieve close to 100% accuracy, I would try to create new features from existing features to improve accuracy. The test set would be used to find the out-of-sample error rate of the best prediction model.</p>
 <p>Partition the data</p>
 <pre class="r"><code>set.seed(1234)
 inTrain &lt;-createDataPartition(y=clean.data$classe, p=0.7, list=FALSE)
 temp &lt;- clean.data[inTrain, ]
 training &lt;- temp[sample(nrow(temp)),]             
-testing &lt;- clean.data[-inTrain,]
-#control &lt;- trainControl(method=&quot;repeatedcv&quot;, number=10, repeats=3)</code></pre>
+testing &lt;- clean.data[-inTrain,]</code></pre>
 <p>Recursive Partition with PCA</p>
-<pre class="r"><code># accuracy =0.3908
-preProc &lt;-preProcess(training[,3:ncol(training)], method=&quot;pca&quot;, thresh=0.95)
+<pre class="r"><code>preProc &lt;-preProcess(training[,3:ncol(training)], method=&quot;pca&quot;, thresh=0.95)
 trainPC &lt;-predict(preProc,training[,3:ncol(training)])
 trainPC &lt;- cbind(classe=training$classe,trainPC)
 modelFit2 &lt;-train(classe ~. ,method=&quot;rpart&quot;, data=trainPC)
@@ -473,8 +473,7 @@ confusionMatrix(training$classe,pred2)</code></pre>
 ## Detection Prevalence    0.284    0.193    0.174   0.1639   0.1838
 ## Balanced Accuracy       0.634       NA       NA   0.6526   0.7111</code></pre>
 <p>Support Vector Machine with PCA</p>
-<pre class="r"><code>#accuracy: 0.9281
-preProc &lt;-preProcess(training[,3:ncol(training)], method=&quot;pca&quot;,thresh=.95)
+<pre class="r"><code>preProc &lt;-preProcess(training[,3:ncol(training)], method=&quot;pca&quot;,thresh=.95)
 preProc$numComp</code></pre>
 <pre><code>## [1] 25</code></pre>
 <pre class="r"><code>trainPC &lt;-predict(preProc,training[,3:ncol(training)])
@@ -512,7 +511,7 @@ confusionMatrix(trainPC$classe,predict(modelFit6,trainPC))</code></pre>
 ## Detection Rate          0.283    0.173    0.165    0.147    0.175
 ## Detection Prevalence    0.284    0.193    0.174    0.164    0.184
 ## Balanced Accuracy       0.976    0.970    0.922    0.962    0.993</code></pre>
-<p>Gradient Boosting</p>
+<p>Stochastic Gradient Boosting</p>
 <pre class="r"><code>modelFit7 &lt;-train(classe ~., method=&quot;gbm&quot;, data=training, verbose=FALSE)
 pred7 &lt;-predict(modelFit7, training)
 confusionMatrix(training$classe,pred7)</code></pre>
@@ -547,7 +546,7 @@ confusionMatrix(training$classe,pred7)</code></pre>
 ## Detection Rate          0.282    0.185    0.169    0.158    0.179
 ## Detection Prevalence    0.284    0.193    0.174    0.164    0.184
 ## Balanced Accuracy       0.991    0.977    0.968    0.986    0.996</code></pre>
-<p>The model with the least in-sample error was Gradient Booting. It had an in-sample accuracy of 97.4% (2.6% error rate). Next, I checked whether or not there was overfitting by using cross-validation data. The error rate should not have increased significantly if there was no overfitting.</p>
+<p>The model with the least in-sample error was Stochastic Gradient Boosting. It had an in-sample accuracy of 97.4% (2.6% error rate). Next, I checked whether or not there was overfitting by using test data. The error rate should not have increased significantly if there was no overfitting.</p>
 <pre class="r"><code>pred7 &lt;-predict(modelFit7, testing)
 confusionMatrix(testing$classe,pred7)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
@@ -581,34 +580,7 @@ confusionMatrix(testing$classe,pred7)</code></pre>
 ## Detection Rate          0.280    0.181    0.167    0.157    0.177
 ## Detection Prevalence    0.284    0.194    0.174    0.164    0.184
 ## Balanced Accuracy       0.985    0.962    0.964    0.979    0.989</code></pre>
-<p>The Gradient Boosting prediction model accuracy on cross-validation data was 96.2%, an error rate of 3.8%. It was not likely that there was overfitting.</p>
-<p>The important variables of the Gradient Boosting prediction model are listed below:</p>
-<pre class="r"><code>varImp(modelFit7,scale = TRUE)</code></pre>
-<pre><code>## gbm variable importance
-## 
-##   only 20 most important variables shown (out of 57)
-## 
-##                   Overall
-## roll_belt          100.00
-## pitch_forearm       51.64
-## yaw_belt            44.25
-## magnet_dumbbell_z   30.02
-## magnet_dumbbell_y   26.20
-## roll_forearm        22.28
-## magnet_belt_z       20.40
-## gyros_belt_z        14.60
-## accel_forearm_x     13.62
-## roll_dumbbell       13.08
-## pitch_belt          11.09
-## accel_dumbbell_y    10.02
-## magnet_forearm_z     9.34
-## gyros_dumbbell_y     9.22
-## yaw_arm              6.89
-## magnet_dumbbell_x    6.19
-## accel_dumbbell_x     5.95
-## magnet_belt_x        5.31
-## magnet_belt_y        5.25
-## magnet_arm_z         4.73</code></pre>
+<p>The Gradient Boosting prediction model accuracy on test data was 96.2% (3.8% error rate). It was not likely that there was overfitting.</p>
 </div>
 <div id="test-cases-prediction" class="section level1">
 <h1>Test Cases Prediction</h1>
