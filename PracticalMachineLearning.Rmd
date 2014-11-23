@@ -107,7 +107,7 @@ pred7 <-predict(modelFit7, testing)
 confusionMatrix(testing$classe,pred7)
 ```
 
-The Gradient Boosting prediction model accuracy on test data was 96.1% (3.9% error rate). The error rate estimate from The cross-validation was almost as low as in-sample estimate.  It was not likely that there was overfitting.
+The Gradient Boosting prediction model accuracy on test data was 96.1% (3.9% error rate). The error rate estimate from the cross-validation was almost as low as in-sample estimate.  It was not likely that there was overfitting.
 
 
 #Test Case Prediction 
